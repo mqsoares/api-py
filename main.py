@@ -49,25 +49,59 @@ def get_produtos():
     return jsonify([produto.serialize() for produto in produtos])
 
 
-@app.route("/produtos", methods=["POST"])
+@app.route("/produto", methods=["POST"])
 def set_produtos():
-    dados = request.get_json()
-    produto = Produtos(
-        nome=dados["nome"],
-        descricao=dados["descricao"],
-        preco=dados["preco"],
-        categoria=dados["categoria"]
-    )
-    mysql.session.add(produto)
-    mysql.session.commit()
-    return jsonify(produto.serialize()), 201
+    try:
+        dados = request.get_json()
+        produto = Produtos(
+            nome=dados["nome"],
+            descricao=dados["descricao"],
+            preco=dados["preco"],
+            categoria=dados["categoria"]
+        )
+        mysql.session.add(produto)
+        mysql.session.commit()
+        return jsonify(produto.serialize()), 201
+    except Exception as e:
+        print(f"Erro: {e}")
+        return "Erro ao cadastrar Produto.", 400
+
+
+@app.route("/produto/<int:id>", methods=["PUT"])
+def update_produto(id):
+    try:
+        dados = request.get_json()
+        produto = mysql.session.query(Produtos).get(id)
+        produto.nome = dados["nome"]
+        produto.descricao = dados["descricao"]
+        produto.preco = dados["preco"]
+        produto.categoria = dados["categoria"]
+
+        mysql.session.commit()
+        return jsonify(produto.serialize()), 201
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Erro ao alterar os dados", 400
+
+
+@app.route("/produto/<int:id>", methods=["DELETE"])
+def delete_produto(id):
+    try:
+        produto = mysql.session.query(Produtos).get(id)
+        mysql.session.delete(produto)
+        mysql.session.commit()
+        return jsonify({'Excluido com sucesso.'}), 204
+    except Exception as e:
+        print(f"Erro: {e}")
+        return "Erro ao excluir produto", 400
+
 
 @app.route("/clientes", methods=["GET"])
 def get_clientes():
     clientes = Clientes.query.all()
     return jsonify([cliente.serialize() for cliente in clientes])
 
-@app.route("/clientes", methods=["POST"])
+@app.route("/cliente", methods=["POST"])
 def set_clientes():
     dados = request.get_json()
     cliente = Clientes(
