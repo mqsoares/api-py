@@ -2,9 +2,9 @@
 ### CRUD de Produtos, Clientes e Pedidos
 Projeto desenvolvido para obtenção de nota na disciplina de Modelagem de Banco de dados.
 
-Alunos:
-- Miquéias R. M. Soares
-- Eduardo Henrique Fidelis Porto
+#### Alunos:
+>   - Miquéias R. M. Soares
+>   - Eduardo Henrique Fidelis Porto
 
 ## Descrição
 
