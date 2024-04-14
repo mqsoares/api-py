@@ -90,7 +90,7 @@ def delete_produto(id):
         produto = mysql.session.query(Produtos).get(id)
         mysql.session.delete(produto)
         mysql.session.commit()
-        return jsonify({'Excluido com sucesso.'}), 204
+        return jsonify("Excluido com sucesso."), 200
     except Exception as e:
         print(f"Erro: {e}")
         return "Erro ao excluir produto", 400
