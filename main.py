@@ -101,6 +101,7 @@ def get_clientes():
     clientes = Clientes.query.all()
     return jsonify([cliente.serialize() for cliente in clientes])
 
+
 @app.route("/cliente", methods=["POST"])
 def set_clientes():
     dados = request.get_json()
@@ -113,6 +114,35 @@ def set_clientes():
     mysql.session.add(cliente)
     mysql.session.commit()
     return jsonify(cliente.serialize()), 201
+
+
+@app.route("/cliente/<int:id>", methods=["PUT"])
+def update_cliente(id):
+    try:
+        dados = request.get_json()
+        cliente = mysql.session.query(Clientes).get(id)
+        cliente.nome = dados["nome"]
+        cliente.email = dados["email"]
+        cliente.cpf = dados["cpf"]
+        cliente.data_nasc = dados["data_nasc"]
+
+        mysql.session.commit()
+        return jsonify(cliente.serialize()), 201
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Erro ao alterar os dados", 400
+
+
+@app.route("/cliente/<int:id>", methods=["DELETE"])
+def delete_cliente(id):
+    try:
+        cliente = mysql.session.query(Clientes).get(id)
+        mysql.session.delete(cliente)
+        mysql.session.commit()
+        return jsonify("Excluído com sucesso"), 200
+    except Exception as e:
+        print(f"Erro: {e}")
+        return "Erro ao excluir cliente", 400
 
 
 if __name__ == '__main__':
